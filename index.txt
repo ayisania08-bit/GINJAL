@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Sistem Pakar Penyakit Ginjal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right,#dfe9f3,#ffffff);
+    margin:0;
+}
+header{
+    background:#2c3e50;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+.container{
+    display:flex;
+    width:95%;
+    margin:20px auto;
+    gap:20px;
+}
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.left{ width:45%; }
+.right{ width:55%; }
+
+h3{
+    color:#2c3e50;
+    border-bottom:2px solid #ecf0f1;
+    padding-bottom:8px;
+}
+.pertanyaan{
+    max-height:420px;
+    overflow-y:auto;
+}
+.item{
+    margin-bottom:10px;
+}
+button{
+    margin-top:15px;
+    width:100%;
+    padding:12px;
+    background:#27ae60;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+button:hover{ background:#1e8449; }
+
+.hasil{
+    background:#ecf0f1;
+    padding:15px;
+    border-radius:8px;
+}
+
+.penyakit{
+    background:#dff9fb;
+    padding:12px;
+    border-left:5px solid #27ae60;
+    border-radius:6px;
+    margin-bottom:12px;
+}
+.solusi{
+    background:#fff;
+    padding:10px;
+    border-radius:6px;
+    margin-top:8px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>Sistem Pakar Deteksi Penyakit Ginjal</h2>
+    <p>Metode Forward Chaining</p>
+</header>
+
+<div class="container">
+
+<!-- INPUT -->
+<div class="card left">
+<h3>Pertanyaan Gejala Pasien</h3>
+<div class="pertanyaan">
+
+<div class="item">
+Apakah Anda mengalami nyeri pinggang?
+<br>
+<input type="radio" name="G1" value="ya"> Ya
+<input type="radio" name="G1" value="tidak"> Tidak
+</div>
+
+<div class="item">
+Apakah Anda merasakan nyeri saat buang air kecil?
+<br>
+<input type="radio" name="G2" value="ya"> Ya
+<input type="radio" name="G2" value="tidak"> Tidak
+</div>
+
+<div class="item">
+Apakah Anda mengalami demam?
+<br>
+<input type="radio" name="G3" value="ya"> Ya
+<input type="radio" name="G3" value="tidak"> Tidak
+</div>
+
+<div class="item">
+Apakah kaki Anda mengalami pembengkakan?
+<br>
+<input type="radio" name="G11" value="ya"> Ya
+<input type="radio" name="G11" value="tidak"> Tidak
+</div>
+
+<div class="item">
+Apakah urin Anda berwarna merah atau coklat?
+<br>
+<input type="radio" name="G14" value="ya"> Ya
+<input type="radio" name="G14" value="tidak"> Tidak
+</div>
+
+<div class="item">
+Apakah tekanan darah Anda tinggi?
+<br>
+<input type="radio" name="G22" value="ya"> Ya
+<input type="radio" name="G22" value="tidak"> Tidak
+</div>
+
+</div>
+<button onclick="diagnosa()">Proses Diagnosa</button>
+</div>
+
+<!-- OUTPUT -->
+<div class="card right">
+<h3>Hasil Diagnosa</h3>
+<div class="hasil" id="hasil">
+Silakan jawab pertanyaan lalu klik proses diagnosa.
+</div>
+</div>
+
+</div>
+
+<script>
+const rules = [
+{
+ nama:"Gagal Ginjal Kronis",
+ gejala:["G11","G14","G22"],
+ solusi:"• Diet rendah garam\n• Kontrol rutin ke dokter\n• Terapi jangka panjang"
+},
+{
+ nama:"Batu Ginjal",
+ gejala:["G1","G2","G14"],
+ solusi:"• Minum air putih minimal 2 liter\n• Hindari makanan tinggi oksalat"
+},
+{
+ nama:"Infeksi Ginjal",
+ gejala:["G2","G3","G14"],
+ solusi:"• Konsumsi antibiotik sesuai anjuran\n• Jaga kebersihan saluran kemih"
+}
+];
+
+function diagnosa(){
+    let input=[];
+
+    document.querySelectorAll('input[type=radio]:checked').forEach(r=>{
+        if(r.value==="ya"){
+            input.push(r.name);
+        }
+    });
+
+    let hasil="";
+    rules.forEach(r=>{
+        if(r.gejala.every(g=>input.includes(g))){
+            hasil+=`
+            <div class="penyakit">
+                <b>${r.nama}</b>
+                <div class="solusi">${r.solusi.replace(/\n/g,"<br>")}</div>
+            </div>`;
+        }
+    });
+
+    document.getElementById("hasil").innerHTML =
+        hasil || "Tidak ditemukan penyakit yang sesuai berdasarkan jawaban Anda.";
+}
+</script>
+
+</body>
+</html>
